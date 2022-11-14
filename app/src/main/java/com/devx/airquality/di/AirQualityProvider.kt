@@ -1,12 +1,16 @@
 package com.devx.airquality.di
 
-import com.devx.airquality.logic.FakeRemoteStationsRepository
-import com.devx.airquality.logic.GetStationsUseCase
+import com.devx.airquality.data.AirlySDataSource
 import com.devx.airquality.logic.RemoteStationsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -14,14 +18,43 @@ import javax.inject.Singleton
 object AirQualityProvider {
 
     @Provides
-    fun provideStationsProvider(remoteStationsRepository: RemoteStationsRepository): GetStationsUseCase {
-        return GetStationsUseCase(remoteStationsRepository)
+    @Singleton
+    fun provideRemoteStationRepository(airService: AirlySDataSource.AirlyService): RemoteStationsRepository {
+        return AirlySDataSource(airService)
     }
 
     @Provides
     @Singleton
-    fun provideRemoteStationsRepository(): RemoteStationsRepository {
-        return FakeRemoteStationsRepository()
+    fun provideHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(AirAuthInterceptor())
+            .build()
     }
 
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(AirlySDataSource.HOST)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAirlyService(retrofit: Retrofit): AirlySDataSource.AirlyService {
+        return retrofit.create(AirlySDataSource.AirlyService::class.java)
+    }
+
+}
+
+class AirAuthInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val requestBuilder = chain.request().newBuilder()
+        requestBuilder.addHeader("apiKey", "1bxSn4EmxywYJCcJ3k0c4WDJNXoePtMF")
+        return chain.proceed(requestBuilder.build())
+    }
 }
