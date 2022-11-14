@@ -1,12 +1,13 @@
 package com.devx.airquality.di
 
-import com.devx.airquality.logic.FakeRemoteStationsRepository
-import com.devx.airquality.logic.GetStationsUseCase
+import com.devx.airquality.data.AirlySDataSource
 import com.devx.airquality.logic.RemoteStationsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -14,14 +15,18 @@ import javax.inject.Singleton
 object AirQualityProvider {
 
     @Provides
-    fun provideStationsProvider(remoteStationsRepository: RemoteStationsRepository): GetStationsUseCase {
-        return GetStationsUseCase(remoteStationsRepository)
+    @Singleton
+    fun provideRemoteStationRepository(airService: AirlySDataSource.AirlyService): RemoteStationsRepository {
+        return AirlySDataSource(airService)
     }
 
     @Provides
     @Singleton
-    fun provideRemoteStationsRepository(): RemoteStationsRepository {
-        return FakeRemoteStationsRepository()
+    fun provideAirlyService(): AirlySDataSource.AirlyService{
+        return Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(AirlySDataSource.HOST)
+            .build()
+            .create(AirlySDataSource.AirlyService::class.java)
     }
 
 }
