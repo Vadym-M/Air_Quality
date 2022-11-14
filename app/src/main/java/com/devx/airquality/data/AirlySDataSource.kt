@@ -4,7 +4,6 @@ import com.devx.airquality.entity.AirQualityStation
 import com.devx.airquality.logic.RemoteStationsRepository
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import javax.inject.Inject
 
 class AirlySDataSource @Inject constructor(private val airlyService: AirlyService): RemoteStationsRepository {
@@ -25,7 +24,6 @@ class AirlySDataSource @Inject constructor(private val airlyService: AirlyServic
     }
 
     interface AirlyService {
-        @Headers("apiKey: 1bxSn4EmxywYJCcJ3k0c4WDJNXoePtMF")
         @GET("installations/nearest?lat=50.062006&lng=19.940984&maxDistanceKM=5&maxResults=100")
         suspend fun getInstallations(): List<Installation>
     }
