@@ -15,23 +15,26 @@ class StationListViewModel @Inject constructor(private val getStationsUseCase: G
     ViewModel() {
 
     var state by mutableStateOf(
-        State(stations = listOf())
+        State(stations = listOf(), isRefreshing = true)
     )
 
     init {
+        loadStations()
+    }
+
+    fun onPullToRefresh() {
+        loadStations()
+    }
+
+    private fun loadStations() {
         viewModelScope.launch {
-            loadStations()
+            val stations = getStationsUseCase()
+            state = State(stations.map { aqStation -> aqStation.name }, isRefreshing = false)
         }
     }
 
-    private suspend fun loadStations() {
-        val stations = getStationsUseCase()
-        state = State(stations.map {
-            it.name
-        })
-    }
-
     data class State(
-        val stations: List<String> = listOf()
+        val stations: List<String> = listOf(),
+        val isRefreshing: Boolean = false
     )
 }
