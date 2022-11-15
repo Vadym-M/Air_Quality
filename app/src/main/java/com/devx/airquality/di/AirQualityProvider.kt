@@ -1,12 +1,16 @@
 package com.devx.airquality.di
 
+import android.content.Context
+import androidx.room.Room
 import com.devx.airquality.data.AirlySDataSource
-import com.devx.airquality.data.local.InMemoryStationRepository
+import com.devx.airquality.data.local.db.AppDatabase
+import com.devx.airquality.data.local.db.DatabaseStationsRepository
 import com.devx.airquality.logic.repository.LocalStationRepository
 import com.devx.airquality.logic.repository.RemoteStationsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -27,8 +31,9 @@ object AirQualityProvider {
 
     @Provides
     @Singleton
-    fun provideLocalStationRepository(): LocalStationRepository {
-        return InMemoryStationRepository()
+    fun provideLocalStationRepository(@ApplicationContext appContext: Context): LocalStationRepository {
+        val database = Room.databaseBuilder(appContext, AppDatabase::class.java, "AirQualityDb").build()
+        return DatabaseStationsRepository(database)
     }
 
     @Provides
