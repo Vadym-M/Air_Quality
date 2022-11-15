@@ -1,6 +1,8 @@
 package com.devx.airquality.di
 
 import com.devx.airquality.data.AirlySDataSource
+import com.devx.airquality.data.local.InMemoryStationRepository
+import com.devx.airquality.logic.repository.LocalStationRepository
 import com.devx.airquality.logic.repository.RemoteStationsRepository
 import dagger.Module
 import dagger.Provides
@@ -21,6 +23,12 @@ object AirQualityProvider {
     @Singleton
     fun provideRemoteStationRepository(airService: AirlySDataSource.AirlyService): RemoteStationsRepository {
         return AirlySDataSource(airService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalStationRepository(): LocalStationRepository {
+        return InMemoryStationRepository()
     }
 
     @Provides
