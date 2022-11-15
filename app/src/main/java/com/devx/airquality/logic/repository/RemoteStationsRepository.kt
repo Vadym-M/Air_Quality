@@ -1,4 +1,4 @@
-package com.devx.airquality.logic
+package com.devx.airquality.logic.repository
 
 import com.devx.airquality.entity.AirQualityStation
 

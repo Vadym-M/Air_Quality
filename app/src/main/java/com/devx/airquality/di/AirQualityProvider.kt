@@ -1,7 +1,7 @@
 package com.devx.airquality.di
 
 import com.devx.airquality.data.AirlySDataSource
-import com.devx.airquality.logic.RemoteStationsRepository
+import com.devx.airquality.logic.repository.RemoteStationsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

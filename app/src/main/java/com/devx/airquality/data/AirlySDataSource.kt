@@ -1,12 +1,13 @@
 package com.devx.airquality.data
 
 import com.devx.airquality.entity.AirQualityStation
-import com.devx.airquality.logic.RemoteStationsRepository
+import com.devx.airquality.logic.repository.RemoteStationsRepository
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.GET
 import javax.inject.Inject
 
-class AirlySDataSource @Inject constructor(private val airlyService: AirlyService): RemoteStationsRepository {
+class AirlySDataSource @Inject constructor(private val airlyService: AirlyService):
+    RemoteStationsRepository {
     override suspend fun getAll(): List<AirQualityStation> {
         return airlyService.getInstallations().map {
             AirQualityStation(

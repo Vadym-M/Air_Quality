@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StationListViewModel @Inject constructor(private val getStationsUseCase: GetStationsUseCase): ViewModel() {
+class StationListViewModel @Inject constructor(private val getStationsUseCase: GetStationsUseCase) :
+    ViewModel() {
 
     var state by mutableStateOf(
         State(stations = listOf())
@@ -32,5 +33,5 @@ class StationListViewModel @Inject constructor(private val getStationsUseCase: G
 
     data class State(
         val stations: List<String> = listOf()
-    ){}
+    )
 }
