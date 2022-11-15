@@ -20,7 +20,7 @@ class AirlySDataSource @Inject constructor(private val airlyService: AirlyServic
         }
     }
 
-    companion object{
+    companion object {
         const val HOST = "https://airapi.airly.eu/v2/"
     }
 
