@@ -6,16 +6,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 
-class StationListView {
-}
+class StationListView
 
 @Composable
-fun StationListScreen(){
+fun StationListScreen() {
 
     val viewModel: StationListViewModel = hiltViewModel()
 
-    LazyColumn{
-        items(viewModel.state.stations){
+    LazyColumn {
+        items(viewModel.state.stations) {
             Text(text = it)
         }
     }
